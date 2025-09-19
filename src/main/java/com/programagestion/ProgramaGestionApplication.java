@@ -43,7 +43,69 @@ public class ProgramaGestionApplication implements CommandLineRunner {
                 String usuario = sc.nextLine();
                 System.out.println("Contraseña: ");
                 String contrasena = sc.nextLine();
-                Optional<Cliente> usuarioExiste = clienteRepository.findByNombre(usuario);
+                Optional<Cliente> usuarioExiste = clienteRepository.findByUsuario(usuario);
+
+                if (usuarioExiste.isEmpty()) {
+                    System.out.println("Usuario no encontrado");
+                    System.out.println("¿Desea registrarse con este nombre de usuario? (s/n): ");
+                    String opcionSesion = sc.nextLine();
+
+                    if (opcionSesion.equalsIgnoreCase("s")) {
+                        clienteRepository.save(Cliente.builder().usuario(usuario).contrasena(contrasena).build());
+                        System.out.println("Usuario registrado");
+                    }
+
+                    if (opcionSesion.equalsIgnoreCase("n")) {
+                        System.out.println("Intentalo de nuevo con otro usuario");
+                    }
+
+                }
+
+                if (loginServices.login(usuario, contrasena)) {
+                    System.out.println("Inicio de sesion exitoso");
+                    System.out.println("Bienvenido al sistema");
+                    while (true) {
+                        System.out.println("""
+                                1. Ver productos
+                                2. Comprar productos
+                                3. Ver carrito
+                                4. Dejar productos
+                                5. Salir
+                                """);
+
+                        String opcionCliente = sc.nextLine();
+
+                        if (opcionCliente.equals("1")) {
+
+                        }
+                    }
+                }
+            }
+
+            if (opcion.equals("2")) {
+                System.out.println("Usuario: ");
+                String usuario = sc.nextLine();
+                System.out.println("Contraseña: ");
+                String contrasena = sc.nextLine();
+
+                Optional<Cliente> usuarioExiste = clienteRepository.findByUsuario(usuario);
+                if (usuarioExiste.isEmpty()) {
+                    clienteRepository.save(Cliente.builder().usuario(usuario).contrasena(contrasena).build());
+                    System.out.println("Usuario registrado");
+                }
+
+                if (usuarioExiste.isPresent()){
+                    System.out.println("Usuario ya registrado");
+                    System.out.println("Intenta iniciar sesion");
+                }
+            } else {
+                System.out.println("Opcion no valida");
+            }
+
+
+            if (opcion.equals("0")) {
+                System.out.println("Cerrado aplicacion...");
+                break;
             }
         }
     }

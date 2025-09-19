@@ -12,7 +12,7 @@ public class LoginServices {
     private ClienteRepository clienteRepository;
 
     public boolean login(String username, String password) {
-        return clienteRepository.findByNombre(username).map(usuario -> usuario.equals(password)).orElse(false);
+        return clienteRepository.findByUsuario(username).map(usuario -> usuario.equals(password)).orElse(false);
     }
 
 
