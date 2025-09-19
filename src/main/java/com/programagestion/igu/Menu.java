@@ -1,6 +1,8 @@
 package com.programagestion.igu;
 
 import com.programagestion.entities.Cliente;
+import com.programagestion.repository.ClienteRepository;
+import com.programagestion.services.LoginServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,14 @@ import java.util.Scanner;
 public class Menu {
     static List<Cliente> clientes = new ArrayList<>();
     static Scanner sc = new Scanner(System.in);
+
+    private LoginServices loginServices;
+    private ClienteRepository clienteRepository;
+
+    public Menu(LoginServices loginServices, ClienteRepository clienteRepository) {
+        this.loginServices = loginServices;
+        this.clienteRepository = clienteRepository;
+    }
 
     static public void menuprincipal() {
         while (true) {
@@ -19,10 +29,6 @@ public class Menu {
 
             String opcion = sc.nextLine();
 
-            if (opcion.equals("1")) {
-                inicioSesion();
-                break;
-            }
             if (opcion.equals("2")) {
                 registrarse();
                 break;
@@ -34,34 +40,6 @@ public class Menu {
             else {
                 System.out.println("Opcion no valida.");
             }
-        }
-    }
-    static public void inicioSesion() {
-        while (true) {
-            System.out.println("* * * INICIO DE SESION * * *");
-            System.out.println("Usuario: ");
-            String usuario = sc.nextLine();
-            System.out.println("Contraseña: ");
-            String password = sc.nextLine();
-            if (clientes.isEmpty()) {
-                System.out.println("No existe el usuario");
-                System.out.println("¿No tienes una cuenta?. Oprime cualquier boton para registrarte");
-                sc.nextLine();
-                registrarse();
-            }
-           for (Cliente cliente : clientes) {
-               if (cliente.getUsuario().equals(usuario) && cliente.getContrasena().equals(password)) {
-                   System.out.println("Todo bien mano");
-                   MenuClientes();
-                   break;
-               } else {
-                   System.out.println("No existe el usuario");
-                   System.out.println("¿No tienes una cuenta?. Oprime cualquier boton para registrarte");
-                   sc.nextLine();
-                   registrarse();
-               }
-               break;
-           }
         }
     }
 
