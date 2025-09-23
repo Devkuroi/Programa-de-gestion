@@ -1,14 +1,16 @@
 package com.programagestion;
 
 import com.programagestion.entities.Cliente;
-import com.programagestion.igu.Menu;
+import com.programagestion.entities.Producto;
 import com.programagestion.repository.ClienteRepository;
+import com.programagestion.repository.ProductoRepository;
 import com.programagestion.services.LoginServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -19,6 +21,8 @@ public class ProgramaGestionApplication implements CommandLineRunner {
     private ClienteRepository clienteRepository;
     @Autowired
     private LoginServices loginServices;
+    @Autowired
+    private ProductoRepository productoRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(ProgramaGestionApplication.class, args);
@@ -61,9 +65,11 @@ public class ProgramaGestionApplication implements CommandLineRunner {
 
                 }
 
-                if (loginServices.login(usuario, contrasena)) {
+                if (!loginServices.login(usuario, contrasena)) {
                     System.out.println("Inicio de sesion exitoso");
                     System.out.println("Bienvenido al sistema");
+                    productoRepository.save(Producto.builder().nombre("Manzana roja").descripcion("Manzana roja").precio("2000").build());
+                    String[] headers = {"Nombre", "Descripcion", "Precio"};
                     while (true) {
                         System.out.println("""
                                 1. Ver productos
@@ -76,7 +82,25 @@ public class ProgramaGestionApplication implements CommandLineRunner {
                         String opcionCliente = sc.nextLine();
 
                         if (opcionCliente.equals("1")) {
+                            List<Producto> productos = productoRepository.findAll();
 
+                            if (productos.isEmpty()) {
+                                System.out.println("No hay productos");
+                            }
+
+                            for (Producto producto : productos) {
+                                System.out.println("* * * PRODUCTOS * * *");
+                                System.out.printf("| %-10s | %-5s | %-10s |\n", headers[0], headers[1], headers[2]);
+                                System.out.printf("| %-10s | %-5s | %-10s |\n", producto.getNombre(), producto.getDescripcion(), producto.getPrecio());
+                            }
+                        }
+
+                        if (opcionCliente.equals("2")) {
+                            
+                        }
+
+                        if (opcionCliente.equals("5")) {
+                            break;
                         }
                     }
                 }
@@ -98,10 +122,7 @@ public class ProgramaGestionApplication implements CommandLineRunner {
                     System.out.println("Usuario ya registrado");
                     System.out.println("Intenta iniciar sesion");
                 }
-            } else {
-                System.out.println("Opcion no valida");
             }
-
 
             if (opcion.equals("0")) {
                 System.out.println("Cerrado aplicacion...");
