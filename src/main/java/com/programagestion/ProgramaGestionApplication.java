@@ -17,22 +17,27 @@ import java.util.Scanner;
 @SpringBootApplication
 public class ProgramaGestionApplication implements CommandLineRunner {
 
+    //inyeccion de dependencias, la inyeccion de dependencias de un patron de diseño que implica que no se crean instancias de la clase si no que se "inyectan" desde el exterior
+    //autowired hace la inyeccion de dependencias, es una herramienta de spring
+
     @Autowired
     private ClienteRepository clienteRepository;
     @Autowired
     private LoginServices loginServices;
     @Autowired
     private ProductoRepository productoRepository;
-
+    //metodo main
     public static void main(String[] args) {
         SpringApplication.run(ProgramaGestionApplication.class, args);
     }
 
     @Override
     public void run(String... args) throws Exception {
+        //verifica que haya datos en la base de datos
         if(clienteRepository.count() == 0) {
             clienteRepository.save(Cliente.builder().usuario("Juan").contrasena("1234").build());
         }
+        //menu de inicio de sesion
         while (true) {
             Scanner sc = new Scanner(System.in);
             System.out.println("""
@@ -47,6 +52,9 @@ public class ProgramaGestionApplication implements CommandLineRunner {
                 String usuario = sc.nextLine();
                 System.out.println("Contraseña: ");
                 String contrasena = sc.nextLine();
+                // aqui se verifica que el usuario este en la base datos haciendo la consulta con los repository
+                //los repository son una interfaz que permite hacer las consultas a la base de datos
+                //los Optional son una forma de darle manejos a la nullPointerException
                 Optional<Cliente> usuarioExiste = clienteRepository.findByUsuario(usuario);
 
                 if (usuarioExiste.isEmpty()) {
@@ -55,6 +63,8 @@ public class ProgramaGestionApplication implements CommandLineRunner {
                     String opcionSesion = sc.nextLine();
 
                     if (opcionSesion.equalsIgnoreCase("s")) {
+                        //aqui creamos una clase usando el patron de diseño builder, lo que permite crear una clase sin necesidad de meterle todos los atributos y tampoco sin crear un constructor solo con estos datos
+                        //save guarda el objeto cliente en la base de datos
                         clienteRepository.save(Cliente.builder().usuario(usuario).contrasena(contrasena).build());
                         System.out.println("Usuario registrado");
                     }
@@ -62,9 +72,8 @@ public class ProgramaGestionApplication implements CommandLineRunner {
                     if (opcionSesion.equalsIgnoreCase("n")) {
                         System.out.println("Intentalo de nuevo con otro usuario");
                     }
-
                 }
-
+                //aqui usamos el login services para verificar que los datos coinciden con lo que hay en la base de datos, en este caso el usuario y la contraseña
                 if (!loginServices.login(usuario, contrasena)) {
                     System.out.println("Inicio de sesion exitoso");
                     System.out.println("Bienvenido al sistema");

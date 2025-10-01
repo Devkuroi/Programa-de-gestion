@@ -7,7 +7,7 @@ import com.programagestion.services.LoginServices;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
+// por el momento no se usa nada de aqui ya que se paso a la clase main aunque se considera pasarlo aqui en clases separadas
 public class Menu {
     static List<Cliente> clientes = new ArrayList<>();
     static Scanner sc = new Scanner(System.in);

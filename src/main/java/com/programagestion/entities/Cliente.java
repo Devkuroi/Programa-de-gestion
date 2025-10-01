@@ -7,15 +7,20 @@ import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+//Etiqueta de spring jpa, esto el nombre de la clase sea el nombre de la tabla y los atributos sean las columnas de la tabla
 @Entity
+//etiquetas de lombok, lombok es una libreria que permite acortar codigo resumiendo los getter, setter, tostring, hash, equals en solo @data
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
+//eso crea el constructor con todos los atributos
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-@Builder
+//eso crea el constructor vacio
 @NoArgsConstructor
+//esto hace que funcione el patron builder
+@Builder
+//esto define el nivel de acceso de los atrbutos, es lo mismo para los constructores
 public class Cliente {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String usuario;
     String contrasena;
